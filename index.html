@@ -307,6 +307,55 @@
 
     .footer-links a:hover { color: var(--black); }
 
+    /* PONG EASTER EGG */
+    #pong-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #pong-overlay.open { display: flex; }
+    #pong-close {
+      position: absolute;
+      top: 24px; right: 32px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #666;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      background: none;
+      border: none;
+    }
+    #pong-close:hover { color: #fff; }
+    #pong-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 16px;
+      font-family: 'Inter', sans-serif;
+    }
+    #pong-canvas { border: 0.5px solid #333; }
+    #pong-score {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #555;
+      margin-top: 14px;
+      font-family: 'Inter', sans-serif;
+    }
+    #pong-hint {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: #333;
+      margin-top: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
     /* MOBILE */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
@@ -408,6 +457,12 @@
     </div>
   </div>
 
+  <div style="padding: 0 40px 0; border-bottom: 0.5px solid var(--black);">
+    <div style="padding: 20px 0 12px; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color: var(--gray);">Listen</div>
+    <iframe style="border-radius:0; margin-bottom: 20px;" src="https://open.spotify.com/embed/artist/3GWjKbXZUq8r7fzVpRcb1i?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay" style="margin-bottom:20px;" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/ededmusicofficial&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe>
+  </div>
+
   <div class="links-section">
     <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="link-btn">
       <div class="spotify-dot"></div> Spotify
@@ -424,6 +479,15 @@
       <a href="https://www.instagram.com/ededmusic_official/" target="_blank">Instagram</a>
     </div>
   </footer>
+
+  <!-- PONG EASTER EGG -->
+  <div id="pong-overlay">
+    <button id="pong-close" onclick="closePong()">✕ Close</button>
+    <div id="pong-label">Joy Dept. Pong — W/S vs ↑/↓</div>
+    <canvas id="pong-canvas" width="600" height="380"></canvas>
+    <div id="pong-score">0 — 0</div>
+    <div id="pong-hint">Click canvas to start</div>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -473,6 +537,117 @@
         start: "top 85%",
       }
     });
+  </script>
+  <script>
+    // Easter egg — click JOY 5x to open Pong
+    let joyClicks = 0;
+    document.querySelector('.hero-joy').addEventListener('click', () => {
+      joyClicks++;
+      if(joyClicks >= 5){ openPong(); joyClicks = 0; }
+    });
+    document.querySelector('.hero-joy').style.cursor = 'pointer';
+
+    function openPong(){
+      document.getElementById('pong-overlay').classList.add('open');
+      initPong();
+    }
+    function closePong(){
+      document.getElementById('pong-overlay').classList.remove('open');
+      cancelAnimationFrame(pongRAF);
+      pongRunning = false;
+    }
+
+    // PONG
+    let pongRAF, pongRunning = false;
+    function initPong(){
+      const canvas = document.getElementById('pong-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const PAD_W = 8, PAD_H = 60, BALL_S = 8, SPEED = 4;
+
+      let state = {
+        ball: {x: W/2, y: H/2, vx: SPEED, vy: SPEED*0.7},
+        p1: {y: H/2 - PAD_H/2},
+        p2: {y: H/2 - PAD_H/2},
+        score: [0, 0],
+        started: false,
+        keys: {}
+      };
+
+      canvas.onclick = () => { state.started = true; document.getElementById('pong-hint').textContent = 'W/S — ↑/↓'; };
+      document.addEventListener('keydown', e => { state.keys[e.key] = true; });
+      document.addEventListener('keyup',  e => { state.keys[e.key] = false; });
+
+      function reset(){
+        state.ball = {x:W/2, y:H/2, vx: (Math.random()>0.5?1:-1)*SPEED, vy:(Math.random()>0.5?1:-1)*SPEED*0.7};
+        state.started = false;
+        document.getElementById('pong-hint').textContent = 'Click to continue';
+      }
+
+      function update(){
+        if(!state.started) return;
+        const PAD_SPEED = 5;
+        if(state.keys['w']||state.keys['W']) state.p1.y = Math.max(0, state.p1.y - PAD_SPEED);
+        if(state.keys['s']||state.keys['S']) state.p1.y = Math.min(H-PAD_H, state.p1.y + PAD_SPEED);
+        if(state.keys['ArrowUp'])   state.p2.y = Math.max(0, state.p2.y - PAD_SPEED);
+        if(state.keys['ArrowDown']) state.p2.y = Math.min(H-PAD_H, state.p2.y + PAD_SPEED);
+
+        state.ball.x += state.ball.vx;
+        state.ball.y += state.ball.vy;
+
+        // Wall bounce
+        if(state.ball.y <= 0 || state.ball.y >= H-BALL_S) state.ball.vy *= -1;
+
+        // Paddle 1 (left)
+        if(state.ball.x <= PAD_W+16 && state.ball.y+BALL_S >= state.p1.y && state.ball.y <= state.p1.y+PAD_H){
+          state.ball.vx = Math.abs(state.ball.vx) * 1.05;
+          state.ball.vy += (state.ball.y - (state.p1.y + PAD_H/2)) * 0.1;
+        }
+        // Paddle 2 (right)
+        if(state.ball.x >= W-PAD_W-16-BALL_S && state.ball.y+BALL_S >= state.p2.y && state.ball.y <= state.p2.y+PAD_H){
+          state.ball.vx = -Math.abs(state.ball.vx) * 1.05;
+          state.ball.vy += (state.ball.y - (state.p2.y + PAD_H/2)) * 0.1;
+        }
+        // Cap speed
+        const spd = Math.sqrt(state.ball.vx**2+state.ball.vy**2);
+        if(spd > 12){ state.ball.vx *= 12/spd; state.ball.vy *= 12/spd; }
+
+        // Score
+        if(state.ball.x < 0){ state.score[1]++; updateScore(); reset(); }
+        if(state.ball.x > W){ state.score[0]++; updateScore(); reset(); }
+      }
+
+      function updateScore(){
+        document.getElementById('pong-score').textContent = state.score[0] + ' — ' + state.score[1];
+      }
+
+      function draw(){
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0,0,W,H);
+        // Center line
+        ctx.setLineDash([4,8]);
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+        ctx.setLineDash([]);
+        // Paddles
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(16, state.p1.y, PAD_W, PAD_H);
+        ctx.fillRect(W-16-PAD_W, state.p2.y, PAD_W, PAD_H);
+        // Ball
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(state.ball.x, state.ball.y, BALL_S, BALL_S);
+      }
+
+      cancelAnimationFrame(pongRAF);
+      pongRunning = true;
+      function loop(){
+        if(!pongRunning) return;
+        update(); draw();
+        pongRAF = requestAnimationFrame(loop);
+      }
+      loop();
+    }
   </script>
 </body>
 </html>
