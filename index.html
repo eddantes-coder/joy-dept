@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joy Dept. — Electronic Music</title>
+  <meta name="description" content="Joy Dept. — Electronic Music. Berlin / Zürich.">
+  <meta property="og:title" content="Joy Dept.">
+  <meta property="og:description" content="Electronic Music. Berlin / Zürich.">
+  <meta property="og:url" content="https://joy-dept.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray: #888888;
+      --border: rgba(0,0,0,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      border-bottom: 0.5px solid var(--black);
+      background: var(--white);
+      opacity: 0;
+    }
+
+    .nav-logo {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 400;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gray); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 120px 40px 40px;
+      border-bottom: 0.5px solid var(--black);
+      overflow: hidden;
+    }
+
+    .hero-title {
+      overflow: hidden;
+      line-height: 0.85;
+    }
+
+    .hero-joy,
+    .hero-dept {
+      display: block;
+      font-size: clamp(100px, 18vw, 220px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      transform: translateY(120%);
+    }
+
+    .hero-dept { margin-left: 0.05em; }
+
+    .hero-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      opacity: 0;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .hero-scroll {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* RELEASES */
+    .releases {
+      padding: 0 40px;
+      border-bottom: 0.5px solid var(--black);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 0.5px solid var(--black);
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .section-link {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .section-link:hover { color: var(--gray); }
+
+    .release-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0;
+      border-bottom: 0.5px solid var(--border);
+      text-decoration: none;
+      color: var(--black);
+      transition: opacity 0.2s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .release-row:last-child { border-bottom: none; }
+    .release-row:hover { opacity: 0.5; }
+
+    .release-left { display: flex; align-items: center; gap: 24px; }
+
+    .release-num {
+      font-size: 11px;
+      color: var(--gray);
+      min-width: 20px;
+    }
+
+    .release-info { display: flex; flex-direction: column; gap: 3px; }
+
+    .release-title { font-size: 16px; font-weight: 400; }
+
+    .release-artist {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .release-date {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .release-play {
+      width: 32px;
+      height: 32px;
+      border: 0.5px solid var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .play-icon {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 0 5px 9px;
+      border-color: transparent transparent transparent var(--black);
+      margin-left: 2px;
+    }
+
+    /* INFO GRID */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 0.5px solid var(--black);
+    }
+
+    .info-cell {
+      padding: 28px 40px;
+      border-right: 0.5px solid var(--black);
+      opacity: 0;
+    }
+
+    .info-cell:last-child { border-right: none; }
+
+    .info-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--black);
+    }
+
+    /* LINKS */
+    .links-section {
+      padding: 40px;
+      border-bottom: 0.5px solid var(--black);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 0.5px solid var(--black);
+      border-radius: 0;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      background: var(--white);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .link-btn:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .spotify-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #1DB954;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      color: var(--gray);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--black); }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { gap: 20px; }
+      .hero { padding: 100px 24px 32px; }
+      .releases { padding: 0 24px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-cell { border-right: none; border-bottom: 0.5px solid var(--black); padding: 24px; }
+      .info-cell:last-child { border-bottom: none; }
+      .links-section { padding: 24px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="/" class="nav-logo">Joy Dept.</a>
+    <ul class="nav-links">
+      <li><a href="#releases">Music</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://soundcloud.com/ededmusicofficial" target="_blank">Mixes</a></li>
+      <li><a href="mailto:info@joy-dept.com">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="hero-title"><span class="hero-joy">JOY</span></div>
+      <div class="hero-title"><span class="hero-dept">DEPT.</span></div>
+    </div>
+    <div class="hero-meta">
+      <span class="hero-tagline">Electronic Music — Berlin / Zürich</span>
+      <span class="hero-scroll">Scroll ↓</span>
+    </div>
+  </section>
+
+  <section class="releases" id="releases">
+    <div class="section-header">
+      <span class="section-label">Latest Releases</span>
+      <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="section-link">All on Spotify →</a>
+    </div>
+
+    <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="release-row">
+      <div class="release-left">
+        <span class="release-num">01</span>
+        <div class="release-info">
+          <span class="release-title">LULU</span>
+          <span class="release-artist">Ed Ed</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;">
+        <span class="release-date">2026</span>
+        <div class="release-play"><div class="play-icon"></div></div>
+      </div>
+    </a>
+
+    <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="release-row">
+      <div class="release-left">
+        <span class="release-num">02</span>
+        <div class="release-info">
+          <span class="release-title">La Marazoto</span>
+          <span class="release-artist">Ed Ed</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;">
+        <span class="release-date">2026</span>
+        <div class="release-play"><div class="play-icon"></div></div>
+      </div>
+    </a>
+
+    <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="release-row">
+      <div class="release-left">
+        <span class="release-num">03</span>
+        <div class="release-info">
+          <span class="release-title">Trip To The Promised Land</span>
+          <span class="release-artist">Ed Ed</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;">
+        <span class="release-date">2026</span>
+        <div class="release-play"><div class="play-icon"></div></div>
+      </div>
+    </a>
+  </section>
+
+  <div class="info-grid" id="about">
+    <div class="info-cell">
+      <div class="info-label">Based in</div>
+      <div class="info-value">Berlin / Zürich</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-label">Label</div>
+      <div class="info-value">Joy Department</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-label">Booking</div>
+      <div class="info-value"><a href="mailto:info@joy-dept.com" style="color:inherit;text-decoration:none;">info@joy-dept.com</a></div>
+    </div>
+  </div>
+
+  <div class="links-section">
+    <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank" class="link-btn">
+      <div class="spotify-dot"></div> Spotify
+    </a>
+    <a href="https://soundcloud.com/ededmusicofficial" target="_blank" class="link-btn">SoundCloud</a>
+    <a href="https://www.instagram.com/ededmusic_official/" target="_blank" class="link-btn">Instagram</a>
+  </div>
+
+  <footer>
+    <span class="footer-copy">© 2026 Joy Department</span>
+    <div class="footer-links">
+      <a href="https://open.spotify.com/artist/3GWjKbXZUq8r7fzVpRcb1i" target="_blank">Spotify</a>
+      <a href="https://soundcloud.com/ededmusicofficial" target="_blank">SoundCloud</a>
+      <a href="https://www.instagram.com/ededmusic_official/" target="_blank">Instagram</a>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    tl.to("#nav", { opacity: 1, duration: 0.6, delay: 0.2 })
+      .to(".hero-joy", { translateY: "0%", duration: 1.1 }, "-=0.3")
+      .to(".hero-dept", { translateY: "0%", duration: 1.1 }, "-=0.9")
+      .to(".hero-meta", { opacity: 1, duration: 0.6 }, "-=0.4");
+
+    gsap.utils.toArray(".release-row").forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        translateY: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+        },
+        delay: i * 0.1
+      });
+    });
+
+    gsap.utils.toArray(".info-cell").forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+        },
+        delay: i * 0.15
+      });
+    });
+
+    gsap.to(".links-section", {
+      opacity: 1,
+      duration: 0.7,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".links-section",
+        start: "top 85%",
+      }
+    });
+  </script>
+</body>
+</html>
