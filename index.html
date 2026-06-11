@@ -20,7 +20,7 @@
       --black: #000000;
       --white: #ffffff;
       --gray: #888888;
-      --border: rgba(0,0,0,0.15);
+      --border: rgba(255,255,255,0.1);
       --orange: #C44A1A;
       --green: #1A3D2B;
       --beige: #C8A882;
@@ -30,8 +30,8 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--white);
-      color: var(--black);
+      background: #000;
+      color: var(--white);
       overflow-x: hidden;
     }
 
@@ -84,7 +84,7 @@
       flex-direction: column;
       justify-content: flex-end;
       padding: 120px 40px 40px;
-      border-bottom: 0.5px solid var(--black);
+      border-bottom: 0.5px solid var(--border);
       overflow: hidden;
       position: relative;
       background: url('Ed_Ed_Vectors_Joy_Dept_3000x3000_RGB.jpg') center center / cover no-repeat;
@@ -157,7 +157,7 @@
     /* RELEASES */
     .releases {
       padding: 0 40px;
-      border-bottom: 0.5px solid var(--black);
+      border-bottom: 0.5px solid var(--border);
     }
 
     .section-header {
@@ -165,7 +165,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 0;
-      border-bottom: 0.5px solid var(--black);
+      border-bottom: 0.5px solid var(--border);
     }
 
     .section-label {
@@ -179,7 +179,7 @@
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--black);
+      color: rgba(255,255,255,0.4);
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -193,7 +193,7 @@
       padding: 22px 0;
       border-bottom: 0.5px solid var(--border);
       text-decoration: none;
-      color: var(--black);
+      color: var(--white);
       transition: opacity 0.2s;
       opacity: 0;
       transform: translateY(20px);
@@ -227,7 +227,7 @@
     .release-play {
       width: 32px;
       height: 32px;
-      border: 0.5px solid var(--black);
+      border: 0.5px solid rgba(255,255,255,0.25);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -240,7 +240,7 @@
       height: 0;
       border-style: solid;
       border-width: 5px 0 5px 9px;
-      border-color: transparent transparent transparent var(--black);
+      border-color: transparent transparent transparent var(--white);
       margin-left: 2px;
     }
 
@@ -248,12 +248,12 @@
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      border-bottom: 0.5px solid var(--black);
+      border-bottom: 0.5px solid var(--border);
     }
 
     .info-cell {
       padding: 28px 40px;
-      border-right: 0.5px solid var(--black);
+      border-right: 0.5px solid var(--border);
       opacity: 0;
     }
 
@@ -270,13 +270,13 @@
     .info-value {
       font-size: 14px;
       font-weight: 400;
-      color: var(--black);
+      color: var(--white);
     }
 
     /* LINKS */
     .links-section {
       padding: 40px;
-      border-bottom: 0.5px solid var(--black);
+      border-bottom: 0.5px solid var(--border);
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
@@ -288,15 +288,15 @@
       align-items: center;
       gap: 8px;
       padding: 10px 20px;
-      border: 0.5px solid var(--black);
+      border: 0.5px solid rgba(255,255,255,0.25);
       border-radius: 0;
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-decoration: none;
-      color: var(--black);
-      background: var(--white);
-      transition: background 0.2s, color 0.2s;
+      color: var(--white);
+      background: transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
 
     .link-btn:hover {
@@ -397,7 +397,7 @@
       .hero { padding: 100px 24px 32px; }
       .releases { padding: 0 24px; }
       .info-grid { grid-template-columns: 1fr; }
-      .info-cell { border-right: none; border-bottom: 0.5px solid var(--black); padding: 24px; }
+      .info-cell { border-right: none; border-bottom: 0.5px solid var(--border); padding: 24px; }
       .info-cell:last-child { border-bottom: none; }
       .links-section { padding: 24px; }
       footer { padding: 20px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
@@ -427,7 +427,7 @@
     </div>
   </section>
 
-  <section style="padding: 40px 40px; border-bottom: 0.5px solid var(--black);">
+  <section style="padding: 40px 40px; border-bottom: 0.5px solid rgba(255,255,255,0.1);">
     <p style="font-size: 13px; color: var(--gray); line-height: 1.8; max-width: 560px;">Joy Dept. is a boutique electronic music label founded in 2025. Deep, hypnotic, dancefloor-ready — rooted in tech and deep house, built for the long night.</p>
   </section>
 
