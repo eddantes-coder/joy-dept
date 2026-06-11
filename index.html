@@ -21,6 +21,9 @@
       --white: #ffffff;
       --gray: #888888;
       --border: rgba(0,0,0,0.15);
+      --orange: #C44A1A;
+      --green: #1A3D2B;
+      --beige: #C8A882;
     }
 
     html { scroll-behavior: smooth; }
@@ -137,7 +140,7 @@
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: var(--beige);
     }
 
     .hero-scroll {
@@ -165,7 +168,7 @@
       font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: var(--orange);
     }
 
     .section-link {
@@ -177,7 +180,7 @@
       transition: color 0.2s;
     }
 
-    .section-link:hover { color: var(--gray); }
+    .section-link:hover { color: var(--orange); }
 
     .release-row {
       display: flex;
@@ -293,7 +296,7 @@
     }
 
     .link-btn:hover {
-      background: var(--black);
+      background: var(--orange);
       color: var(--white);
     }
 
@@ -332,7 +335,7 @@
       transition: color 0.2s;
     }
 
-    .footer-links a:hover { color: var(--black); }
+    .footer-links a:hover { color: var(--orange); }
 
     /* PONG EASTER EGG */
     #pong-overlay {
@@ -549,7 +552,7 @@
         positions[idx*3]   = (c / (COLS-1) - 0.5) * 70;
         positions[idx*3+1] = 0;
         positions[idx*3+2] = (r / (ROWS-1) - 0.5) * 40;
-        colors[idx*3] = colors[idx*3+1] = colors[idx*3+2] = 0.7;
+        colors[idx*3] = 0.55; colors[idx*3+1] = 0.48; colors[idx*3+2] = 0.38; // warm beige base
         idx++;
       }
     }
@@ -586,8 +589,8 @@
 
     // Bright streak positions
     let streaks = [
-      { x: -25, speed: 0.008 },
-      { x:  15, speed: 0.006 },
+      { x: -25, speed: 0.008, r: 1.0, g: 0.29, b: 0.10 }, // burnt orange
+      { x:  15, speed: 0.006, r: 0.10, g: 0.55, b: 0.30 }, // forest green
     ];
 
     function animate(time){
@@ -607,17 +610,21 @@
           const y = noise(x*0.08, z*0.1, t);
           pos[idx*3+1] = y;
 
-          // Color: white base, brighter near streaks
-          let bright = 0.55 + (y + 2) * 0.06;
-          let glow = 0;
+          // Color: warm beige base, colored streaks
+          let bright = 0.35 + (y + 2) * 0.05;
+          let rGlow = 0, gGlow = 0, bGlow = 0;
           streaks.forEach(s => {
             const dist = Math.abs(x - s.x);
-            if(dist < 8) glow = Math.max(glow, 1 - dist/8);
+            if(dist < 10) {
+              const g = (1 - dist/10) * 0.9;
+              rGlow = Math.max(rGlow, g * s.r);
+              gGlow = Math.max(gGlow, g * s.g);
+              bGlow = Math.max(bGlow, g * s.b);
+            }
           });
-          // Near-streak: bright white/cyan tint
-          col[idx*3]   = Math.min(1, bright + glow * 0.6);
-          col[idx*3+1] = Math.min(1, bright + glow * 0.8);
-          col[idx*3+2] = Math.min(1, bright + glow * 1.0);
+          col[idx*3]   = Math.min(1, bright * 0.55 + rGlow);
+          col[idx*3+1] = Math.min(1, bright * 0.48 + gGlow);
+          col[idx*3+2] = Math.min(1, bright * 0.38 + bGlow);
           idx++;
         }
       }
